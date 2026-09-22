@@ -1,5 +1,12 @@
-import { Component, inject, OnInit } from "@angular/core";
-import { ReactiveFormsModule, FormArray, FormGroup, FormControl, FormBuilder } from "@angular/forms";
+import { Component, inject, OnInit, signal } from "@angular/core";
+import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators } from "@angular/forms";
+
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  hobbies: string[];
+}
 
 @Component({
   selector: 'dynamic-form',
@@ -10,11 +17,19 @@ import { ReactiveFormsModule, FormArray, FormGroup, FormControl, FormBuilder } f
 export class DynamicForm implements OnInit {
   private formBuilder = inject(FormBuilder);
 
-  userForm = this.formBuilder.group({
+  public user = signal<User>({
     firstName: '',
     lastName: '',
     email: '',
-    hobbies: this.formBuilder.array([]),
+    hobbies: [],
+  });
+
+
+  userForm = this.formBuilder.nonNullable.group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    email: ['', Validators.required],
+    hobbies: this.formBuilder.nonNullable.array<string>([]),
   });
 
   get hobbies() {
@@ -22,6 +37,37 @@ export class DynamicForm implements OnInit {
   }
 
   ngOnInit() {
-    // console.log(this.userForm.controls);
+
+  }
+
+  addHobby() {
+    this.hobbies.push(new FormControl(''));
+  }
+
+  removeHobby(index: number) {
+    console.log(index);
+    this.hobbies.removeAt(index);
+    console.log(this.hobbies.value);
+  }
+
+  public saveUser() {
+    const userValue = this.userForm.value;
+    console.log(userValue);
+
+    if (this.isValidUser(userValue)) {
+      this.user.set(userValue);
+    }
+
+    console.log('MY USER: ', this.user());
+  }
+
+  private isValidUser(value: Partial<User>): value is User {
+    return (
+      typeof value.firstName === 'string' &&
+      typeof value.lastName === 'string' &&
+      typeof value.email === 'string' &&
+      Array.isArray(value.hobbies) &&
+      value.hobbies.every((hobby): hobby is string => typeof hobby === 'string')
+    );
   }
 }

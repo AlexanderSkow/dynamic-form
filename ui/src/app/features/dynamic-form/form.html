@@ -1,24 +1,25 @@
 <h3>Create a User</h3>
 
-<form [formGroup]="userForm">
+<form [formGroup]="userForm" (ngSubmit)="saveUser()">
   <label for="first-name">First Name:</label>
-  <input id="first-name" type="text" value="{{ userForm.get('firstName')?.value }}">
+  <input id="first-name" type="text" value="{{ userForm.get('firstName')?.value }}" formControlName="firstName">
 
   <label for="last-name">Last Name:</label>
-  <input id="last-name" type="text" value="{{ userForm.get('lastName')?.value }}">
+  <input id="last-name" type="text" value="{{ userForm.get('lastName')?.value }}" formControlName="lastName">
 
   <label for="email">Email:</label>
-  <input id = email type="email" value="{{ userForm.get('email')?.value }}">
+  <input id="email" type="email" value="{{ userForm.get('email')?.value }}" formControlName="email">
 
-  @for(hobby of hobbies.controls; track $index; let i = $index) {
-    <div>
-      <label for="hobby-{{ i }}">Hobby:</label>
-      <input id="{{ i }}" type="text" value="{{ hobby.value }}">
-      <button type="button">Remove Hobby</button>
-    </div>
-  }
-
-  <button>Add Hobby</button>
+  <div formArrayName="hobbies">
+    @for(hobby of hobbies.controls; track $index; let i = $index) {
+      <div>
+        <label for="hobby-{{ i }}">Hobby:</label>
+        <input id="hobby-{{ i }}" type="text" value="{{ hobby.value }}" [formControlName]="i">
+        <button type="button" (click)="removeHobby(i)">Remove Hobby</button>
+      </div>
+    }
+    <button type="button" (click)="addHobby()">Add Hobby</button>
+  </div>
 
   <button type="submit">Save</button>
 </form>
