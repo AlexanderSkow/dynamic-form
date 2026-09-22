@@ -1,1 +1,24 @@
-<h3>Create a Form</h3>
+<h3>Create a User</h3>
+
+<form [formGroup]="userForm">
+  <label for="first-name">First Name:</label>
+  <input id="first-name" type="text" value="{{ userForm.get('firstName')?.value }}">
+
+  <label for="last-name">Last Name:</label>
+  <input id="last-name" type="text" value="{{ userForm.get('lastName')?.value }}">
+
+  <label for="email">Email:</label>
+  <input id = email type="email" value="{{ userForm.get('email')?.value }}">
+
+  @for(hobby of hobbies.controls; track $index; let i = $index) {
+    <div>
+      <label for="hobby-{{ i }}">Hobby:</label>
+      <input id="{{ i }}" type="text" value="{{ hobby.value }}">
+      <button type="button">Remove Hobby</button>
+    </div>
+  }
+
+  <button>Add Hobby</button>
+
+  <button type="submit">Save</button>
+</form>
