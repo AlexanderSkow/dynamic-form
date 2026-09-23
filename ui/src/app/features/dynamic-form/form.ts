@@ -50,6 +50,10 @@ export class DynamicForm implements OnInit {
     console.log(this.hobbies.value);
   }
 
+  resetForm() {
+    this.userForm.reset();
+  }
+
   public saveUser() {
     const userValue = this.userForm.value;
     console.log(userValue);
