@@ -1,12 +1,7 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, OnInit, signal, output } from "@angular/core";
 import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators } from "@angular/forms";
-
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  hobbies: string[];
-}
+import { UserDto } from "../../domains/user.dto";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: 'dynamic-form',
@@ -16,14 +11,14 @@ interface User {
 })
 export class DynamicForm implements OnInit {
   private formBuilder = inject(FormBuilder);
+  private userService = inject(UserService);
 
-  public user = signal<User>({
+  public user = signal<UserDto>({
     firstName: '',
     lastName: '',
     email: '',
     hobbies: [],
   });
-
 
   userForm = this.formBuilder.nonNullable.group({
     firstName: ['', Validators.required],
@@ -45,9 +40,7 @@ export class DynamicForm implements OnInit {
   }
 
   removeHobby(index: number) {
-    console.log(index);
     this.hobbies.removeAt(index);
-    console.log(this.hobbies.value);
   }
 
   resetForm() {
@@ -56,16 +49,17 @@ export class DynamicForm implements OnInit {
 
   public saveUser() {
     const userValue = this.userForm.value;
-    console.log(userValue);
 
-    if (this.isValidUser(userValue)) {
+    if (this.isValidUserDto(userValue)) {
       this.user.set(userValue);
     }
 
     console.log('MY USER: ', this.user());
+
+    this.userService.send(this.user());
   }
 
-  private isValidUser(value: Partial<User>): value is User {
+  private isValidUserDto(value: Partial<UserDto>): value is UserDto {
     return (
       typeof value.firstName === 'string' &&
       typeof value.lastName === 'string' &&

@@ -3,3 +3,23 @@
 <nav>
   <a routerLink="/create-form">Create Form</a>
 </nav>
+
+<div class="user-list">
+  <ul>
+    @if(users().length === 0) {
+      <p>There are no users in the list right now...</p>
+    }@else {
+      @for(user of users(); track $index; let i = $index) {
+        <li>
+          {{ user.firstName }} {{ user.lastName }}
+          {{ user.email }}
+          <ul>
+            @for(hobby of user.hobbies; track $index; let hobbyidx = $index) {
+              <li>{{ hobby }}</li>
+            }
+          </ul>
+        </li>
+      }
+    }
+  </ul>
+</div>
