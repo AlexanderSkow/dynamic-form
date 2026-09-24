@@ -32,7 +32,6 @@ export class DynamicForm implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   addHobby() {

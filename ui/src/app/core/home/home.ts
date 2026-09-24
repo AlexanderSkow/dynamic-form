@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal} from '@angular/core';
 import {RouterLinkWithHref } from '@angular/router';
-import { UserDto } from '../domains/user.dto';
-import { UserService } from '../services/user.service';
+import { UserDto } from '../../domains/user.dto';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-root',
