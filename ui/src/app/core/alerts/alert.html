@@ -1,0 +1,5 @@
+@if (hasMessage()) {
+  <div class="alert-{{ determineMessageClass() }}">
+    <p>{{ message() }}</p>
+  </div>
+}
