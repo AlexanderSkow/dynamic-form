@@ -1,8 +1,9 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
-import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators } from "@angular/forms";
+import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators, Form, FormGroup } from "@angular/forms";
 import { UserDto } from "../../domains/user.dto";
 import { UserService } from "../../services/user.service";
 import { AlertService } from "../../services/alert.service";
+import { USER_VALIDATION_ERROR_MESSAGES } from "../../shared/constants/validation-error.constants";
 
 @Component({
   selector: 'dynamic-form',
@@ -23,9 +24,9 @@ export class DynamicForm implements OnInit {
   });
 
   userForm = this.formBuilder.nonNullable.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    email: ['', Validators.required],
+    firstName: ['', [Validators.required, Validators.minLength(3)]],
+    lastName: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
     hobbies: this.formBuilder.nonNullable.array<string>([]),
   });
 
@@ -50,20 +51,42 @@ export class DynamicForm implements OnInit {
 
   public saveUser() {
     const userValue = this.userForm.value;
+    const creationStatus = this.userForm.valid;
+    const message = creationStatus ? 'User Created Successfully!' : this.determineErrorMessage(this.userForm);
 
-    if (!this.userForm.valid || !this.isValidUserDto(userValue)) {
-      const message = 'Creating a user has failed. Please try again.'
-      const status = this.userForm.valid;
-0
-      this.alertService.sendMessage(message, status);
-      return;
-    } else {
-      const message = 'User created successfully!';
-      const status = true;
-
+    if (creationStatus && this.isValidUserDto(userValue)) {
       this.user.set(userValue);
       this.userService.send(this.user());
-      this.alertService.sendMessage(message, status);
+    }
+
+    this.alertService.sendMessage(message, creationStatus);
+  }
+
+  private determineErrorMessage(userForm: FormGroup): string {
+    const firstName = userForm.controls['firstName'];
+    const lastName = userForm.controls['lastName'];
+    const email = userForm.controls['email'];
+    const hobbies = userForm.controls['hobbies'];
+
+    if (firstName.hasError('required')) {
+      return USER_VALIDATION_ERROR_MESSAGES['firstNameRequired'];
+    }
+    else if (firstName.hasError('minlength')) {
+      return USER_VALIDATION_ERROR_MESSAGES['firstNameLength'];
+    }
+    else if (lastName.hasError('required')) {
+      return USER_VALIDATION_ERROR_MESSAGES['lastNameRequired'];
+    }
+    else if (lastName.hasError('minlength')) {
+      return USER_VALIDATION_ERROR_MESSAGES['lastNameLength'];
+    }
+    else if (email.hasError('required')) {
+      return USER_VALIDATION_ERROR_MESSAGES['emailRequired'];
+    } 
+    else if (email.hasError('email')) {
+      return USER_VALIDATION_ERROR_MESSAGES['emailValid'];
+    } else {
+      return 'Unknown user error!';
     }
   }
 

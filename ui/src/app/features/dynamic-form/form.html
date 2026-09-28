@@ -2,10 +2,10 @@
 
 <form [formGroup]="userForm" (ngSubmit)="saveUser()">
   <label for="first-name">First Name:</label>
-  <input id="first-name" type="text" value="{{ userForm.get('firstName')?.value }}" formControlName="firstName">
+  <input id="first-name" type="text" value="{{ userForm.get('firstName')?.value }}" formControlName="firstName" minlength="3">
 
   <label for="last-name">Last Name:</label>
-  <input id="last-name" type="text" value="{{ userForm.get('lastName')?.value }}" formControlName="lastName">
+  <input id="last-name" type="text" value="{{ userForm.get('lastName')?.value }}" formControlName="lastName" minlength="3">
 
   <label for="email">Email:</label>
   <input id="email" type="email" value="{{ userForm.get('email')?.value }}" formControlName="email">
