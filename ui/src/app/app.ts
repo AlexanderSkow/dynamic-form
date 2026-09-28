@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet, RouterLinkWithHref, NavigationEnd, Router } from '@angular/router';
-import { AlertComponent } from './core/alerts/alert';
+import { AlertComponent } from './core/alerts/alert.component';
 import { filter } from 'rxjs';
 
 @Component({

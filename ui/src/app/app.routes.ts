@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { Home } from './core/home/home';
-import { DynamicForm } from './features/dynamic-form/form';
+import { Home } from './core/home/home.component';
+import { DynamicForm } from './features/dynamic-form/form.component';
 
 export const routes: Routes = [
   {
