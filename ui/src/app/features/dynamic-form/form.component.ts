@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
-import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators, Form, FormGroup } from "@angular/forms";
+import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { UserDto } from "../../domains/user.dto";
 import { UserService } from "../../services/user.service";
 import { AlertService } from "../../services/alert.service";
@@ -9,7 +9,7 @@ import { USER_VALIDATION_ERROR_MESSAGES } from "../../shared/constants/validatio
   selector: 'dynamic-form',
   imports: [ReactiveFormsModule],
   templateUrl: 'form.html',
-  styleUrl: './../../app.css',
+  styleUrl: 'form.css',
 })
 export class DynamicForm implements OnInit {
   private formBuilder = inject(FormBuilder);
