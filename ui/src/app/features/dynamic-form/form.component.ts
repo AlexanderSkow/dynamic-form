@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
-import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators, FormGroup, AbstractControl } from "@angular/forms";
 import { UserDto } from "../../domains/user.dto";
 import { UserService } from "../../services/user.service";
 import { AlertService } from "../../services/alert.service";
@@ -38,7 +38,10 @@ export class DynamicForm implements OnInit {
   }
 
   addHobby() {
-    this.hobbies.push(new FormControl(''));
+    const newControl = new FormControl('');
+    newControl.addValidators([Validators.required, Validators.minLength(3)]);
+
+    this.hobbies.push(newControl);
   }
 
   removeHobby(index: number) {
@@ -66,7 +69,7 @@ export class DynamicForm implements OnInit {
     const firstName = userForm.controls['firstName'];
     const lastName = userForm.controls['lastName'];
     const email = userForm.controls['email'];
-    const hobbies = userForm.controls['hobbies'];
+    const hobbies = this.hobbies.controls;
 
     if (firstName.hasError('required')) {
       return USER_VALIDATION_ERROR_MESSAGES['firstNameRequired'];
@@ -85,9 +88,24 @@ export class DynamicForm implements OnInit {
     } 
     else if (email.hasError('email')) {
       return USER_VALIDATION_ERROR_MESSAGES['emailValid'];
-    } else {
+    } 
+    else if (this.hobbiesNotFilled(hobbies)) {
+      return USER_VALIDATION_ERROR_MESSAGES['hobbyRequired'];
+    }
+    else if (this.hobbiesTooShort(hobbies)) {
+      return USER_VALIDATION_ERROR_MESSAGES['hobbyLength'];
+    }
+    else {
       return 'Unknown user error!';
     }
+  }
+
+  private hobbiesNotFilled(hobbies: AbstractControl[]) {
+    return hobbies.some(hobby => hobby.hasError('required'));
+  }
+
+  private hobbiesTooShort(hobbies: AbstractControl[]) {
+    return hobbies.some(hobby => hobby.hasError('minlength'));
   }
 
   private isValidUserDto(value: Partial<UserDto>): value is UserDto {
