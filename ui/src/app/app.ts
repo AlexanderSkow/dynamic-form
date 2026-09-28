@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet, RouterLinkWithHref, NavigationEnd, Router } from '@angular/router';
+import { AlertComponent } from './core/alerts/alert';
 import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLinkWithHref],
+  imports: [RouterOutlet, RouterLinkWithHref, AlertComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -1,7 +1,8 @@
-import { Component, inject, OnInit, signal, output } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators } from "@angular/forms";
 import { UserDto } from "../../domains/user.dto";
 import { UserService } from "../../services/user.service";
+import { AlertService } from "../../services/alert.service";
 
 @Component({
   selector: 'dynamic-form',
@@ -12,6 +13,7 @@ import { UserService } from "../../services/user.service";
 export class DynamicForm implements OnInit {
   private formBuilder = inject(FormBuilder);
   private userService = inject(UserService);
+  private alertService = inject(AlertService)
 
   public user = signal<UserDto>({
     firstName: '',
@@ -49,13 +51,20 @@ export class DynamicForm implements OnInit {
   public saveUser() {
     const userValue = this.userForm.value;
 
-    if (this.isValidUserDto(userValue)) {
+    if (!this.userForm.valid || !this.isValidUserDto(userValue)) {
+      const message = 'Creating a user has failed. Please try again.'
+      const status = this.userForm.valid;
+0
+      this.alertService.sendMessage(message, status);
+      return;
+    } else {
+      const message = 'User created successfully!';
+      const status = true;
+
       this.user.set(userValue);
+      this.userService.send(this.user());
+      this.alertService.sendMessage(message, status);
     }
-
-    console.log('MY USER: ', this.user());
-
-    this.userService.send(this.user());
   }
 
   private isValidUserDto(value: Partial<UserDto>): value is UserDto {

@@ -1,4 +1,5 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, } from "@angular/core";
+import { AlertService } from "../../services/alert.service";
 
 @Component({
   selector: 'alert-component',
@@ -6,19 +7,5 @@ import { Component, signal } from "@angular/core";
   styleUrl: 'alert.css',
 })
 export class AlertComponent {
-  public message = signal<string>('');
-  public hasError = signal<boolean>(false);
-
-  hasMessage() {
-    return this.message() !== '';
-  }
-
-  sendMessage(message: string, hasError: boolean): void {
-    this.message.set(message);
-    this.hasError.set(hasError);
-  }
-
-  determineMessageClass(): string {
-    return this.hasError() ? 'success' : 'fail';
-  }
+  public alertService = inject(AlertService);
 }

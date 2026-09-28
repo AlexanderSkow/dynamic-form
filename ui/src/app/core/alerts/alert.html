@@ -1,5 +1,6 @@
-@if (hasMessage()) {
-  <div class="alert-{{ determineMessageClass() }}">
-    <p>{{ message() }}</p>
+@if (alertService._message()) {
+  <div class="alert {{ alertService._status() }}">
+    <p>{{ alertService._message() }}</p>
+    <button (click)="alertService.clear()">Clear</button>
   </div>
 }

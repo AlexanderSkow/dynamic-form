@@ -1,0 +1,18 @@
+div.alert {
+  border-radius: 3px;
+  border: 2px solid;
+  width: 20%;
+  height: 100px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+div.success {
+  border-color: green;
+  background-color: lightgreen;
+}
+
+div.fail {
+  border-color: red;
+  background-color: lightcoral;
+}
