@@ -1,13 +1,20 @@
-import { signal, Injectable } from "@angular/core";
-import { UserDto } from "../domains/user.dto";
+import { inject, Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { UserDto, CreateUserDto } from "../domains/user.dto";
+import { SuccessDto } from "../domains/success.dto";
+
+const userUrl = 'http://localhost:3000/users';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  readonly _user = signal<UserDto | null>(null);
-  readonly _users = signal<UserDto[]>([]);
+  private http = inject(HttpClient);
 
-  send(newUser: UserDto) {
-    this._user.set(newUser);
-    this._users.update(users => [...users, newUser]);
+  public getUsers(): Observable<UserDto[]> {
+    return this.http.get<UserDto[]>(userUrl);
+  }
+
+  public addUser(createUserDto: CreateUserDto): Observable<SuccessDto> {
+    return this.http.post<SuccessDto>(userUrl, createUserDto);
   }
 }

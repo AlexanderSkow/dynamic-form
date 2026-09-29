@@ -16,12 +16,7 @@ export class DynamicForm implements OnInit {
   private userService = inject(UserService);
   private alertService = inject(AlertService)
 
-  public user = signal<UserDto>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    hobbies: [],
-  });
+  public user = signal<UserDto | null>(null);
 
   userForm = this.formBuilder.nonNullable.group({
     firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -58,8 +53,7 @@ export class DynamicForm implements OnInit {
     const message = creationStatus ? 'User Created Successfully!' : this.determineErrorMessage(this.userForm);
 
     if (creationStatus && this.isValidUserDto(userValue)) {
-      this.user.set(userValue);
-      this.userService.send(this.user());
+      this.userService.addUser(userValue).subscribe();
     }
 
     this.alertService.sendMessage(message, creationStatus);

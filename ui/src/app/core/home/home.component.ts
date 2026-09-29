@@ -13,14 +13,16 @@ export class Home implements OnInit {
   private userService = inject(UserService);
 
   public users = signal<UserDto[]>([]);
-  protected readonly title = signal('Dynamic Form Home Page');
+  protected readonly title = signal('All Users');
 
   ngOnInit() {
     this.getUsers();
   }
   
   private getUsers() {
-    const users = this.userService._users();
-    this.users.set(users);
+    this.userService.getUsers()
+    .subscribe((users: UserDto[]) => {
+      this.users.set(users);
+    })
   }
 }
