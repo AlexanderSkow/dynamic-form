@@ -11,6 +11,10 @@
   <input id="email" type="email" value="{{ userForm.get('email')?.value }}" formControlName="email">
 
   <div formArrayName="hobbies">
+    @if (hobbies.length === 0) {
+      <p>There are no hobbies...</p>
+    }
+
     @for(hobby of hobbies.controls; track $index; let i = $index) {
       <div>
         <label for="hobby-{{ i }}">Hobby:</label>

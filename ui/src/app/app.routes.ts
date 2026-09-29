@@ -10,8 +10,14 @@ export const routes: Routes = [
   },
 
   {
-    path: 'create-form',
+    path: 'users/new',
     component: DynamicForm,
-    title: 'Create Form'
+    title: 'Add User'
   },
+
+  {
+    path: 'users/:id',
+    component: DynamicForm,
+    title: 'Edit User'
+  }
 ];

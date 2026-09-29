@@ -1,7 +1,7 @@
 <h2>{{ title() }}</h2>
 
 <nav>
-  <a routerLink="/create-form">Add User</a>
+  <a routerLink="users/new">Add User</a>
 </nav>
 
 <div class="user-list">
@@ -11,14 +11,20 @@
     }@else {
       @for(user of users(); track $index; let i = $index) {
         <li>
-          {{ user.firstName }} {{ user.lastName }}
+          <a routerLink="users/{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</a>
           {{ user.email }}
+          @if(user.hobbies.length > 0) {
+            <h5>Hobbies:</h5>
+          } @else {
+            <h5>No Hobbies...</h5>
+          }
           <ul>
             @for(hobby of user.hobbies; track $index; let hobbyidx = $index) {
               <li>{{ hobby }}</li>
             }
           </ul>
         </li>
+        <br>
       }
     }
   </ul>
