@@ -23,7 +23,11 @@ export class UserService {
     this.users.push(newUser);
   }
 
-  public async editUser(id: number, editUserDto: UserDto) {
+  public findUser(userId: number): User | undefined {
+    return this.users.find(({ id }) => id === userId);
+  }
+
+  public editUser(id: number, editUserDto: UserDto) {
     const index = this.findUserIndex(id);
     this.users[index] = editUserDto;
   }
@@ -36,10 +40,6 @@ export class UserService {
   private getNewId() {
     const lastIdx = this.users.length - 1;
     return this.users.map(({ id }) => id)[lastIdx] + 1;
-  }
-
-  private findUser(userId: number) {
-    return this.users.find(({ id }) => id === userId);
   }
 
   private findUserIndex(userId: number) {
