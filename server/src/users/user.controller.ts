@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Put, Param, ParseIntPipe, HttpStatus, HttpException, Delete } from "@nestjs/common";
 import { UserService } from "./user.service.js";
 import { CreateUserDto, UserDto } from "./dto/user.dto.js";
+import { SucessDto } from "../common/dto/success.dto.js";
 
 @Controller('users')
 export class UserController {
@@ -13,9 +14,9 @@ export class UserController {
   }
 
   @Post()
-  async addUser(@Body() createUserdto: CreateUserDto):Promise<string> {
+  async addUser(@Body() createUserdto: CreateUserDto):Promise<SucessDto> {
     await this.userService.addUser(createUserdto);
-    return 'User Successfully Created!';
+    return { message: 'User Successfully Created!' };
   }
 
   @Get(':id')
@@ -35,16 +36,16 @@ export class UserController {
   async editUser(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
   id: number,
   @Body() editUserDto: UserDto
-  ): Promise<string> {
+  ): Promise<SucessDto> {
     this.userService.editUser(id, editUserDto);
-    return 'User Successfully Edited!';
+    return { message: 'User Successfully Edited!' };
   }
 
   @Delete(':id')
   async deleteUser(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
   id: number
-  ): Promise<string> {
+  ): Promise<SucessDto> {
     this.userService.deleteUser(id);
-    return 'User Successfully deleted!';
+    return { message: 'User Successfully deleted!' };
   }
 }
