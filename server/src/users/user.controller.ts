@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Param, ParseIntPipe, HttpStatus, HttpException } from "@nestjs/common";
+import { Body, Controller, Get, Post, Put, Param, ParseIntPipe, HttpStatus, HttpException, Delete } from "@nestjs/common";
 import { UserService } from "./user.service.js";
 import { CreateUserDto, UserDto } from "./dto/user.dto.js";
 
@@ -23,7 +23,7 @@ export class UserController {
     id: number
   ): Promise<UserDto> {
     const result = this.userService.findUser(id);
-    
+
     if (result === undefined) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     } else {
@@ -38,5 +38,13 @@ export class UserController {
   ): Promise<string> {
     this.userService.editUser(id, editUserDto);
     return 'User Successfully Edited!';
-  } 
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }))
+  id: number
+  ): Promise<string> {
+    this.userService.deleteUser(id);
+    return 'User Successfully deleted!';
+  }
 }

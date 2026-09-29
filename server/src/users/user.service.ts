@@ -32,6 +32,11 @@ export class UserService {
     this.users[index] = editUserDto;
   }
 
+  public deleteUser(id: number) {
+    const index = this.findUserIndex(id);
+    this.users.splice(index, 1);
+  }
+
   private formatUser(createUserdto: CreateUserDto): User {
     const id = this.getNewId();
     return { id, ...createUserdto, };
