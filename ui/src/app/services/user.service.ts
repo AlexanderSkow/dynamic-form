@@ -25,4 +25,8 @@ export class UserService {
   public editUser(user: UserDto, id: number):Observable<SuccessDto> {
     return this.http.put<SuccessDto>(`${userUrl}/${id}`, user);
   }
+
+  public deleteUser(id: number):Observable<SuccessDto> {
+    return this.http.delete<SuccessDto>(`${userUrl}/${id}`);
+  }
 }

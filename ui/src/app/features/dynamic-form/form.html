@@ -31,4 +31,8 @@
 
   <button type="submit">Save</button>
   <button type="reset" (click)="resetForm()">{{ isUserPage() ? 'Clear User' : 'Reset' }}</button>
+
+  @if (isUserPage()) {
+    <button type="button" class="delete" (click)="deleteUser()">Delete</button>
+  }
 </form>

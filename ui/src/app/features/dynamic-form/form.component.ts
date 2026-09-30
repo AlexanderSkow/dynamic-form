@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators, FormGroup, AbstractControl } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { UserDto } from "../../domains/user.dto";
 import { UserService } from "../../services/user.service";
 import { AlertService } from "../../services/alert.service";
@@ -16,6 +16,7 @@ export class DynamicForm implements OnInit {
   private formBuilder = inject(FormBuilder);
   private userService = inject(UserService);
   private alertService = inject(AlertService);
+  private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
 
   public userId = signal<null | number>(null);
@@ -65,6 +66,18 @@ export class DynamicForm implements OnInit {
     this.userForm.reset();
   }
 
+  public deleteUser() {
+    if (!this.isUserPage()) return;
+    const userId = this.userId();
+
+    if (typeof userId === 'number') {
+      this.userService.deleteUser(userId).subscribe(response => {
+        this.alertService.sendMessage(response.message, true);
+        this.navigateHome();
+      });
+    }
+  }
+
   public saveUser() {
     const userValue = this.userForm.value;
     const creationStatus = this.userForm.valid;
@@ -75,12 +88,13 @@ export class DynamicForm implements OnInit {
     }
 
     this.alertService.sendMessage(message, creationStatus);
+    this.navigateHome();
   }
 
   private handleFormSubmission(userValue: Omit<UserDto, 'id'>) {
     if (this.isUserPage()) {
       const userId = this.userId();
-      
+
       if (typeof userId === 'number') {
         const editUserValue = {id: userId, ...userValue};
         this.userService.editUser(editUserValue, userId).subscribe();      
@@ -88,6 +102,10 @@ export class DynamicForm implements OnInit {
     } else {
       this.userService.addUser(userValue).subscribe();
     }
+  }
+
+  private navigateHome() {
+    this.router.navigate(['']);
   }
 
   private determineSuccessMessage() {
