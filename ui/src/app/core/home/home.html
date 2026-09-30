@@ -23,6 +23,8 @@
               <li>{{ hobby }}</li>
             }
           </ul>
+          <br>
+          <button type="button" class="delete" attr.data-id="{{ user.id }}" (click)="deleteUser($event)">Delete</button>
         </li>
         <br>
       }
