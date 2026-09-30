@@ -46,6 +46,6 @@ export class UserController {
   id: number
   ): Promise<SucessDto> {
     this.userService.deleteUser(id);
-    return { message: 'User Successfully deleted!' };
+    return { message: 'User Successfully Deleted!' };
   }
 }
