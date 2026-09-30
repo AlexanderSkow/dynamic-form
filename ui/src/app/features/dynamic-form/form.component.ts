@@ -72,8 +72,8 @@ export class DynamicForm implements OnInit {
 
     if (typeof userId === 'number') {
       this.userService.deleteUser(userId).subscribe(response => {
-        this.alertService.sendMessage(response.message, true);
         this.navigateHome();
+        this.alertService.sendMessage(response.message, true);
       });
     }
   }
@@ -85,10 +85,10 @@ export class DynamicForm implements OnInit {
 
     if (creationStatus && this.isValidUserDto(userValue)) {
       this.handleFormSubmission(userValue);
+      this.navigateHome();
     }
 
     this.alertService.sendMessage(message, creationStatus);
-    this.navigateHome();
   }
 
   private handleFormSubmission(userValue: Omit<UserDto, 'id'>) {
