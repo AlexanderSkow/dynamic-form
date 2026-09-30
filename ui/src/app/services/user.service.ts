@@ -17,4 +17,8 @@ export class UserService {
   public addUser(createUserDto: CreateUserDto): Observable<SuccessDto> {
     return this.http.post<SuccessDto>(userUrl, createUserDto);
   }
+
+  public getUser(id: number):Observable<UserDto> {
+    return this.http.get<UserDto>(`${userUrl}/${id}`);
+  }
 }

@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { ReactiveFormsModule, FormArray, FormControl, FormBuilder, Validators, FormGroup, AbstractControl } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 import { UserDto } from "../../domains/user.dto";
 import { UserService } from "../../services/user.service";
 import { AlertService } from "../../services/alert.service";
@@ -14,9 +15,11 @@ import { USER_VALIDATION_ERROR_MESSAGES } from "../../shared/constants/validatio
 export class DynamicForm implements OnInit {
   private formBuilder = inject(FormBuilder);
   private userService = inject(UserService);
-  private alertService = inject(AlertService)
+  private alertService = inject(AlertService);
+  private activatedRoute = inject(ActivatedRoute);
 
-  public user = signal<UserDto | null>(null);
+  public userId = signal<null | number>(null);
+  public isUserPage = signal<boolean>(false);
 
   userForm = this.formBuilder.nonNullable.group({
     firstName: ['', [Validators.required, Validators.minLength(3)]],
@@ -30,10 +33,25 @@ export class DynamicForm implements OnInit {
   }
 
   ngOnInit() {
+    const userId = this.activatedRoute.snapshot.paramMap.get('id');
+    if (userId === null) return;
+
+    const userIdAsNumber = Number(userId);
+
+      this.userId.set(userIdAsNumber);
+      this.isUserPage.set(true);
+
+      this.userService.getUser(userIdAsNumber).subscribe((fetchedUser: UserDto) => {
+        this.userForm.patchValue(fetchedUser);
+        
+        fetchedUser.hobbies.forEach((hobby: string) => {
+          this.addHobby(hobby);
+        });
+      });
   }
 
-  addHobby() {
-    const newControl = new FormControl('');
+  addHobby(value: string = '') {
+    const newControl = new FormControl(value);
     newControl.addValidators([Validators.required, Validators.minLength(3)]);
 
     this.hobbies.push(newControl);
