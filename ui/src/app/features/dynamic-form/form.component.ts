@@ -43,7 +43,7 @@ export class DynamicForm implements OnInit {
 
       this.userService.getUser(userIdAsNumber).subscribe((fetchedUser: UserDto) => {
         this.userForm.patchValue(fetchedUser);
-        
+
         fetchedUser.hobbies.forEach((hobby: string) => {
           this.addHobby(hobby);
         });
@@ -68,13 +68,30 @@ export class DynamicForm implements OnInit {
   public saveUser() {
     const userValue = this.userForm.value;
     const creationStatus = this.userForm.valid;
-    const message = creationStatus ? 'User Created Successfully!' : this.determineErrorMessage(this.userForm);
+    const message = creationStatus ? this.determineSuccessMessage() : this.determineErrorMessage(this.userForm);
 
     if (creationStatus && this.isValidUserDto(userValue)) {
-      this.userService.addUser(userValue).subscribe();
+      this.handleFormSubmission(userValue);
     }
 
     this.alertService.sendMessage(message, creationStatus);
+  }
+
+  private handleFormSubmission(userValue: Omit<UserDto, 'id'>) {
+    if (this.isUserPage()) {
+      const userId = this.userId();
+      
+      if (typeof userId === 'number') {
+        const editUserValue = {id: userId, ...userValue};
+        this.userService.editUser(editUserValue, userId).subscribe();      
+      }
+    } else {
+      this.userService.addUser(userValue).subscribe();
+    }
+  }
+
+  private determineSuccessMessage() {
+    return this.isUserPage() ? 'User Edited Successfully!' : 'User Created Successfully!';
   }
 
   private determineErrorMessage(userForm: FormGroup): string {

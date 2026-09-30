@@ -21,4 +21,8 @@ export class UserService {
   public getUser(id: number):Observable<UserDto> {
     return this.http.get<UserDto>(`${userUrl}/${id}`);
   }
+
+  public editUser(user: UserDto, id: number):Observable<SuccessDto> {
+    return this.http.put<SuccessDto>(`${userUrl}/${id}`, user);
+  }
 }

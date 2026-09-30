@@ -43,6 +43,8 @@ export class UserService {
   }
 
   private getNewId() {
+    if (this.users.length === 0) return 1;
+
     const lastIdx = this.users.length - 1;
     return this.users.map(({ id }) => id)[lastIdx] + 1;
   }
